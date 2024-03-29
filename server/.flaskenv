@@ -1,0 +1,5 @@
+FLASK_APP=server.py
+FLASK_DEBUG=true
+FLASK_RUN_PORT=9897
+FLASK_RUN_HOST="0.0.0.0"
+JWT_SECRET="jhjhjh$#jg%huhYT76R8563747rtygGUI6r#@%$#%Tiyft6r^&^"
