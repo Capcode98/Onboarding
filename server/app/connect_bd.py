@@ -2,14 +2,14 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
-from models import Pessoa  # Supondo que você já tenha definido o modelo Pessoa
+from app.models.pessoa_models import Pessoa  # Supondo que você já tenha definido o modelo Pessoa
 from sqlalchemy import create_engine
 
 def conectar_bd():
 
     try:
     
-        engine = create_engine('mysql://root:Jl04081998@127.0.0.1/db_onboarding')
+        engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
     
         Session = sessionmaker(bind=engine)
     

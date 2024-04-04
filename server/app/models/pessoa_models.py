@@ -16,11 +16,11 @@ class Pessoa(Base):
     cidade = Column(String(100))
     estado = Column(String(100))
     pais = Column(String(100))
-    cep = Column(String(20))
-    cpf = Column(String(20), unique=True)
-    rg = Column(String(20))
+    cep = Column(String(9))
+    cpf = Column(String(14), unique=True)
+    rg = Column(String(20), unique=True)
     data_nascimento = Column(Date)
-    sexo = Column(Enum('Masculino', 'Feminino', 'Outro'))  # Sugestão: usar ENUM para sexo
+    sexo = Column(Enum('Masculino', 'Feminino', 'Prefiro Não Declarar'))  # Sugestão: usar ENUM para sexo
     estado_civil = Column(Enum('Solteiro(a)', 'Casado(a)', 'Divorciado(a)', 'Viúvo(a)', 'Outro'))
     profissao = Column(String(100))
     salario = Column(DECIMAL(10, 2))  # Sugestão: usar DECIMAL para valores monetários
@@ -33,10 +33,10 @@ class Pessoa(Base):
     curriculo = Column(String(255))  # Sugestão: armazenar o caminho para o currículo, não o currículo em si
 
     __table_args__ = (
-        UniqueConstraint('cpf', 'email', name='_cpf_email_uc'),  # Garante que tanto CPF quanto email sejam únicos
+        UniqueConstraint('cpf','rg', 'email', name='_cpf_rg_email_uc'),  # Garante que tanto CPF quanto email sejam únicos
     )
 
-    # Substitua 'mysql://user:password@localhost/database' pela sua URL de conexão com o banco de dados MySQL
-engine = create_engine('mysql://root:Jl04081998@127.0.0.1/db_onboarding')
+# Substitua 'mysql://user:password@localhost/database' pela sua URL de conexão com o banco de dados MySQL
+engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
 
 Base.metadata.create_all(engine)
