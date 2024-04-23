@@ -34,7 +34,6 @@ class Pessoa(Base):
     curriculo = Column(String(255))  # Sugestão: armazenar o caminho para o currículo, não o currículo em si
     data_de_cadastro = Column(date.today())
     
-    
 
     __table_args__ = (
         UniqueConstraint('cpf','rg', 'email', name='_cpf_rg_email_uc'),  # Garante que tanto CPF quanto email sejam únicos

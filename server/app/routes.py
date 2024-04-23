@@ -1,5 +1,8 @@
 from flask import request, jsonify, render_template
-from app.connect_bd import cadastrar,login
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from app.connect_bd import cadastrar_Pessoa, login
 from app import app
 
 @app.route('/')
@@ -71,7 +74,7 @@ def Cadastro():
     try:
         data = request.get_json()
         
-        cadastrar(**data)
+        cadastrar_Pessoa(**data)
 
         access_token = create_access_token(identity=request.json.get("nome"))
         
@@ -82,12 +85,6 @@ def Cadastro():
         print("Erro ao cadastrar pessoa:", e)
         
         return jsonify({"msg": "Erro ao cadastrar pessoa"}), 500
-
-
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.

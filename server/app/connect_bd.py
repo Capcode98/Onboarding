@@ -6,6 +6,7 @@ from server.app.models.pessoa_model import Pessoa
 from server.app.models.checklist_model import Item
 from sqlalchemy import create_engine
 
+#FUNCIONANDO
 def conectar_bd():
 
     try:
@@ -22,15 +23,14 @@ def conectar_bd():
     
         return None
 
-#_____________________________Pessoas________________________________#
+#________________________________Pessoas___________________________________#
 
+#FUNCIONANDO
 def login(login, senha):
 
     try:
 
         session = conectar_bd()
-
-        print(f"login: {login} senha: {senha}")
         
         if session is not None:
         
@@ -55,7 +55,8 @@ def login(login, senha):
             session.close()
 
 
-def cadastrar_Item(**kwargs):
+#FUNCIONANDO
+def cadastrar_Pessoa(**kwargs):
     
     try:
     
@@ -69,12 +70,12 @@ def cadastrar_Item(**kwargs):
     
             session.commit()
     
-            print("Cadastro realizado com sucesso")
+            print("Cadastro da pessoa realizado com sucesso")
     
     except SQLAlchemyError as e:
-    
+
         print("Erro ao cadastrar pessoa:", e)
-    
+
         session.rollback()
         
         raise e 
@@ -86,11 +87,16 @@ def cadastrar_Item(**kwargs):
             session.close()
 
 
-def editar_pessoa():
+def editar(arg,**kwargs):
+
+    """Edita um registro no banco de dados"""
+
+    
     pass
 
-#_____________________________Pessoas________________________________#
+#_____________________________Item_da_Lista________________________________#
 
+#FUNCIONANDO
 def cadastrar_Item(**kwargs):
     
     try:
@@ -99,17 +105,17 @@ def cadastrar_Item(**kwargs):
     
         if session is not None:
     
-            pessoa = Pessoa(**kwargs)
+            item = Item(**kwargs)
     
-            session.add(pessoa)
+            session.add(item)
     
             session.commit()
     
-            print("Cadastro realizado com sucesso")
+            print("Cadastro do item realizado com sucesso")
     
     except SQLAlchemyError as e:
     
-        print("Erro ao cadastrar pessoa:", e)
+        print("Erro ao item pessoa:", e)
     
         session.rollback()
         

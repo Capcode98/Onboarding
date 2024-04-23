@@ -3,6 +3,6 @@ from app import app
 import os
 
 # Setup Flask-JWT-Extended
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')  # Change this!
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
 jwt = JWTManager(app)
 
