@@ -4,10 +4,11 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-class Pessoa(Base):
-    __tablename__ = 'pessoas'
+class Item(Base):
+    __tablename__ = 'checklist'
 
     id = Column(Integer, primary_key=True)
+    
     nome = Column(String(100), nullable=False)
     senha = Column(String(255), nullable=False)  # Sugestão: usar uma função de hash para armazenar senhas de forma segura
     email = Column(String(100), nullable=False, unique=True)

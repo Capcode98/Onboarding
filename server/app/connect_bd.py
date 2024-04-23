@@ -2,7 +2,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.pessoa_models import Pessoa  # Supondo que você já tenha definido o modelo Pessoa
+from server.app.models.pessoa_model import Pessoa 
+from server.app.models.checklist_model import Item
 from sqlalchemy import create_engine
 
 def conectar_bd():
@@ -21,39 +22,15 @@ def conectar_bd():
     
         return None
 
-def cadastrar(**kwargs):
-    
-    try:
-    
-        session = conectar_bd()
-    
-        if session is not None:
-    
-            pessoa = Pessoa(**kwargs)
-    
-            session.add(pessoa)
-    
-            session.commit()
-    
-            print("Cadastro realizado com sucesso")
-    
-    except SQLAlchemyError as e:
-    
-        print("Erro ao cadastrar pessoa:", e)
-    
-        session.rollback()
-    
-    finally:
-    
-        if session:
-    
-            session.close()
+#_____________________________Pessoas________________________________#
 
 def login(login, senha):
 
     try:
 
         session = conectar_bd()
+
+        print(f"login: {login} senha: {senha}")
         
         if session is not None:
         
@@ -76,3 +53,80 @@ def login(login, senha):
         if session:
     
             session.close()
+
+
+def cadastrar_Item(**kwargs):
+    
+    try:
+    
+        session = conectar_bd()
+    
+        if session is not None:
+    
+            pessoa = Pessoa(**kwargs)
+    
+            session.add(pessoa)
+    
+            session.commit()
+    
+            print("Cadastro realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar pessoa:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+
+def editar_pessoa():
+    pass
+
+#_____________________________Pessoas________________________________#
+
+def cadastrar_Item(**kwargs):
+    
+    try:
+    
+        session = conectar_bd()
+    
+        if session is not None:
+    
+            pessoa = Pessoa(**kwargs)
+    
+            session.add(pessoa)
+    
+            session.commit()
+    
+            print("Cadastro realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar pessoa:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+
+def editar_item():
+    pass
+
+
+def excluir_item():
+    pass
+
+

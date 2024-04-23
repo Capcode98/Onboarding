@@ -1,12 +1,53 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from app.connect_bd import cadastrar,login
 from app import app
 
+@app.route('/')
+def Init():
+    
+    return render_template("home.html")
+
+
+@app.route('/modelo_protected.html')
+def Modelo_Protected():
+    
+    return render_template("modelo_protected.html")
+
+
+@app.route('/modelo_token.html')
+def Modelo_Token():
+    
+    return render_template("modelo_token.html")
+
+
+@app.route('/modelo_logout.html')
+def Modelo_Logout():
+    
+    return render_template("modelo_logout.html")
+
+
+@app.route('/modelo_login.html')
+def Modelo_Login():
+    
+    return render_template("modelo_login.html")
+
+
+@app.route('/modelo_cadastro.html')
+def Modelo_Cadastro():
+    
+    return render_template("modelo_cadastro.html")
+
+@app.route('/documentation.html')
+def Documentation():
+    
+    return render_template("documentation.html")
 
 @app.route('/login', methods=['POST'])
 def Login():
     try:
         data = request.get_json()
+
+        print(data)
         
         pessoa = login(**data)
         
@@ -31,8 +72,10 @@ def Cadastro():
         data = request.get_json()
         
         cadastrar(**data)
+
+        access_token = create_access_token(identity=request.json.get("nome"))
         
-        return jsonify({"msg": "Cadastro realizado com sucesso"}), 201
+        return jsonify({"msg": "Cadastro realizado com sucesso","token":f"{access_token}"}), 201
     
     except Exception as e:
         
@@ -49,7 +92,7 @@ from flask_jwt_extended import jwt_required
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
 @app.route("/token", methods=["POST"])
-def create_token():
+def Create_token():
   
     username = request.json.get("username",None)
     username_in_bd = "admin"
@@ -76,7 +119,7 @@ def create_token():
 # without a valid JWT present.
 @app.route("/protected", methods=["GET"])
 @jwt_required()
-def protected():
+def Protected():
     
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
