@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
 
 
-def conectar_bd():
+def connecting_bd():
 
     try:
         engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')

@@ -2,7 +2,7 @@ from flask import request, jsonify, render_template
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import cadastrar_pessoa, login
+from app.models.connect_bd import register_person, login
 from app import app
 
 
@@ -42,7 +42,7 @@ def Modelo_Cadastro():
 def Documentation():
     return render_template("documentation.html")
 
-#__________________________Rotas_de_Autenticação_______________________#
+#__________________________Rotas_de_Autenticação_de_Pessoa_______________________#
 
 @app.route('/login', methods=['POST'])
 def Login():
@@ -50,9 +50,9 @@ def Login():
     try:
         data = request.get_json()
         print(data)
-        pessoa = login(**data)
+        person = login(**data)
 
-        if pessoa is not None:
+        if person is not None:
             return jsonify({"msg": "Login realizado com sucesso"}), 200
         
         else:
@@ -68,21 +68,28 @@ def Cadastro():
 
     try:
         data = request.get_json()
-        cadastrar_pessoa(**data)
-        access_token = create_access_token(identity=request.json.get("nome"))
+        register_person(**data)
+        access_token = create_access_token(identity=request.json.get("cpf"))
         return jsonify({"msg": "Cadastro realizado com sucesso","token":f"{access_token}"}), 201
     
     except Exception as e:
         print("Erro ao cadastrar pessoa:", e)
         return jsonify({"msg": "Erro ao cadastrar pessoa"}), 500
+    
+
+@app.route("/logout", methods=["POST"])
+@jwt_required()
+def Logout():
+
+    return jsonify({"msg": "Logout realizado com sucesso"}), 200
 
 #__________________________Rotas_de_Proteção_______________________#
-# Protect a route with jwt_required, which will kick out requests
-# without a valid JWT present.
+
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def Protected():
 
     current_user = get_jwt_identity()
+    print(current_user)
     print(request.get_data())
     return jsonify(logged_in_as=current_user), 200

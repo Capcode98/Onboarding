@@ -1,29 +1,29 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.model import Pessoa, Item
-from app.models.connectar_bd import conectar_bd
+from app.models.model import Person, Item
+from app.models.connectar_bd import connecting_bd
 from sqlalchemy import create_engine
 
 
 #________________________________Pessoas___________________________________#
 
 #FUNCIONANDO
-def login(login, senha):
+def login(login, password):
 
     '''Faz login de uma pessoa'''
 
     try:
 
-        session = conectar_bd()
+        session = connecting_bd()
         
         if session is not None:
         
-            query = session.query(Pessoa).filter((Pessoa.email == login) | (Pessoa.cpf == login)).filter(Pessoa.senha == senha)
+            query = session.query(Person).filter((Person.email == login) | (Person.cpf == login)).filter(Person.password == password)
         
-            pessoa = query.one()
+            person = query.one()
         
-            return pessoa
+            return person
     
     except NoResultFound:
     
@@ -41,19 +41,19 @@ def login(login, senha):
 
 
 #FUNCIONANDO
-def cadastrar_pessoa(**kwargs):
+def register_person(**kwargs):
 
     '''Adiciona uma pessoa na lista'''
     
     try:
     
-        session = conectar_bd()
+        session = connecting_bd()
     
         if session is not None:
     
-            pessoa = Pessoa(**kwargs)
+            person = Person(**kwargs)
     
-            session.add(pessoa)
+            session.add(person)
     
             session.commit()
     
@@ -74,19 +74,19 @@ def cadastrar_pessoa(**kwargs):
             session.close()
 
 
-def editar_pessoas(login1,senha1,**kwargs):
+def edit_person(login1,password1,**kwargs):
 
     '''Edita um ou mais campos de uma pessoa'''
 
     try:
         
-        session = conectar_bd()
+        session = connecting_bd()
 
-        pessoa = login(login=login1,senha=senha1)
+        person = login(login=login1,password=password1)
 
         for key, value in kwargs.items():
 
-            setattr(pessoa, key, value)
+            setattr(person, key, value)
 
         session.commit()
 
@@ -108,13 +108,13 @@ def editar_pessoas(login1,senha1,**kwargs):
 #_____________________________Item_da_Lista________________________________#
 
 #FUNCIONANDO
-def cadastrar_item(**kwargs):
+def register_item(**kwargs):
 
     '''Adiciona um item na lista'''
     
     try:
     
-        session = conectar_bd()
+        session = connecting_bd()
     
         if session is not None:
     
@@ -141,11 +141,11 @@ def cadastrar_item(**kwargs):
             session.close()
 
 
-def listar_itens(id_pessoa):
+def list_itens(id_pessoa):
     
     """Lista todos os itens da lista"""
     
-    session = conectar_bd()
+    session = connecting_bd()
     
     try:
     
@@ -166,11 +166,11 @@ def listar_itens(id_pessoa):
             session.close()
 
 
-def editar_item(id_item, **kwargs):
+def edit_item(id_item, **kwargs):
     
     """Edita os campos de um item da lista"""
     
-    session = conectar_bd()
+    session = connecting_bd()
     
     try:
     
@@ -205,11 +205,11 @@ def editar_item(id_item, **kwargs):
             session.close()
 
 
-def excluir_item(id_item):
+def dellete_item(id_item):
         
         """Exclui um item da lista"""
         
-        session = conectar_bd()
+        session = connecting_bd()
         
         try:
         
