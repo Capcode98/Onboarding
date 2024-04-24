@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, url_for
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -82,6 +82,17 @@ def Cadastro():
 def Logout():
 
     return jsonify({"msg": "Logout realizado com sucesso"}), 200
+
+#__________________________Rotas_de_Criação_e_Alteração_de_Itens_____________________#
+@app.route('/produtos', methods=['POST'])
+@jwt_required()
+def Produtos():
+    return jsonify({"msg": "Produto criado com sucesso"}), 200, {'Location': url_for('Produtos')}
+
+@app.route('/produtos/<int:id>', methods=['PUT'])
+@jwt_required()
+def Atualizar_Produto(id):
+    return jsonify({"msg": "Produto atualizado com sucesso"}), 200
 
 #__________________________Rotas_de_Proteção_______________________#
 
