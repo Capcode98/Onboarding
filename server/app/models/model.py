@@ -11,7 +11,7 @@ class Person(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    password = Column(BLOB(256), nullable=False)  # Sugestão: usar uma função de hash para armazenar senhas de forma segura
+    password = Column(BLOB(256), nullable=False)  
     email = Column(String(100), nullable=False, unique=True)
     phone = Column(String(20))
     address = Column(String(255))
@@ -22,15 +22,15 @@ class Person(Base):
     cpf = Column(String(14), unique=True)
     rg = Column(String(20), unique=True)
     birth_date = Column(Date)
-    sex = Column(Enum('Masculino', 'Feminino', 'Prefiro Não Declarar'))  # Sugestão: usar ENUM para sexo
+    sex = Column(Enum('Masculino', 'Feminino', 'Prefiro Não Declarar'))  
     civil_status = Column(Enum('Solteiro(a)', 'Casado(a)', 'Divorciado(a)', 'Viúvo(a)', 'Outro'))
     profession = Column(String(100))
-    salary = Column(DECIMAL(10, 2))  # Sugestão: usar DECIMAL para valores monetários
+    salary = Column(DECIMAL(10, 2))  
     schooling = Column(Enum('Fundamental', 'Médio', 'Superior', 'Pós-graduação', 'Mestrado', 'Doutorado', 'Outro'))
     language = Column(String(100))
-    skills = Column(Text)  # Sugestão: armazenar habilidades em um formato de texto ou JSON
-    experience = Column(Text)  # Sugestão: armazenar experiência em um formato de texto ou JSON
-    objective = Column(Text)  # Sugestão: armazenar objetivo em um formato de texto ou JSON
+    skills = Column(Text)  
+    experience = Column(Text)  
+    objective = Column(Text)  
     photo = Column(String(255))  # Sugestão: armazenar o caminho para a foto, não a foto em si
     cv = Column(String(255))  # Sugestão: armazenar o caminho para o currículo, não o currículo em si
     create_at = Column(DateTime)
