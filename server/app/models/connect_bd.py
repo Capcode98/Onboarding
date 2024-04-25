@@ -3,7 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 from app.models.model import Person, Item
 from app.models.connectar_bd import connecting_bd
-from sqlalchemy import create_engine
+from hashlib import sha256
 
 
 #________________________________Pessoas___________________________________#
@@ -19,7 +19,7 @@ def login(login, password):
         
         if session is not None:
         
-            query = session.query(Person).filter((Person.email == login) | (Person.cpf == login)).filter(Person.password == password)
+            query = session.query(Person).filter((Person.email == login) | (Person.cpf == login)).filter(Person.password == sha256(password.encode()).digest())
         
             person = query.one()
         

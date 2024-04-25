@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, Enum, Text, DECIMAL, UniqueConstraint, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Date, Enum, Text, DECIMAL, UniqueConstraint, ForeignKey, DateTime, BinaryExpression, BINARY, BLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from hashlib import sha256
 from datetime import datetime
 
 Base = declarative_base()
@@ -10,7 +11,7 @@ class Person(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    password = Column(String(255), nullable=False)  # Sugestão: usar uma função de hash para armazenar senhas de forma segura
+    password = Column(BLOB(256), nullable=False)  # Sugestão: usar uma função de hash para armazenar senhas de forma segura
     email = Column(String(100), nullable=False, unique=True)
     phone = Column(String(20))
     address = Column(String(255))
@@ -40,7 +41,7 @@ class Person(Base):
 
     def __init__(self, nome, senha, email, telefone, endereco, cidade, estado, pais, cep, cpf, rg, data_nascimento, sexo, estado_civil, profissao, salario, escolaridade, idioma, habilidades, experiencia, objetivo, foto, curriculo):
         self.name = nome
-        self.password = senha
+        self.password = sha256(senha.encode()).digest()
         self.email = email
         self.phone = telefone
         self.address = endereco
@@ -63,6 +64,9 @@ class Person(Base):
         self.photo = foto
         self.cv = curriculo
         self.create_at = datetime.now()
+    
+    def get_cpf(self):
+        return self.cpf
 
 class Item(Base):
     __tablename__ = 'checklist'

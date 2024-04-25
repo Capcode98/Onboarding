@@ -6,6 +6,10 @@ from app.models.connect_bd import register_person, login
 from app import app
 
 
+def create_token(request):
+    access_token = create_access_token(identity=request.json.get("cpf"))
+    return access_token
+
 #__________________________Rotas_de_Painas_Estáticas_______________________#
 
 @app.route('/')
@@ -53,7 +57,10 @@ def Login():
         person = login(**data)
 
         if person is not None:
-            return jsonify({"msg": "Login realizado com sucesso"}), 200
+            
+            access_token = create_access_token(identity=person.get_cpf())
+
+            return jsonify({"msg": "Login realizado com sucesso","token":f"{access_token}"}), 200
         
         else:
             return jsonify({"msg": "Combinação de email/cpf e senha não encontrada"}), 401
@@ -86,7 +93,7 @@ def Logout():
 #__________________________Rotas_de_Criação_e_Alteração_de_Itens_____________________#
 @app.route('/produtos', methods=['POST'])
 @jwt_required()
-def Produtos():
+def Criar_Produtos():
     return jsonify({"msg": "Produto criado com sucesso"}), 200, {'Location': url_for('Produtos')}
 
 @app.route('/produtos/<int:id>', methods=['PUT'])
