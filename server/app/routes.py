@@ -1,8 +1,8 @@
-from flask import request, jsonify, render_template, url_for
+from flask import request, jsonify, render_template, Response, make_response
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens
 from app import app
 
 
@@ -90,16 +90,34 @@ def Logout():
 
     return jsonify({"msg": "Logout realizado com sucesso"}), 200
 
-#__________________________Rotas_de_Criação_e_Alteração_de_Itens_____________________#
-@app.route('/produtos', methods=['POST'])
+#__________________________Rotas_de_Criação,_Deleção_e_Alteração_de_Itens_____________________#
+@app.route('/itens', methods=['POST'])
 @jwt_required()
-def Criar_Produtos():
-    return jsonify({"msg": "Produto criado com sucesso"}), 200, {'Location': url_for('Produtos')}
+def Criar_Itens():
+    data = request.get_json()
+    register_item(**data)
+    return jsonify({"msg": f"Itens criado com sucesso \n {request.get_json()}"}), 200
 
-@app.route('/produtos/<int:id>', methods=['PUT'])
+@app.route('/itens', methods=['PUT'])
 @jwt_required()
-def Atualizar_Produto(id):
-    return jsonify({"msg": "Produto atualizado com sucesso"}), 200
+def Atualizar_Item():
+    data = request.get_json()
+    edit_item(**data)
+    return jsonify({"msg": "Item atualizado com sucesso"}), 200
+
+@app.route('/itens', methods=['GET'])
+@jwt_required()
+def Listar_Itens():
+    print(get_jwt_identity())
+    dict_items= list_itens(get_jwt_identity())
+    return jsonify(dict_items),200
+
+@app.route('/itens', methods=['DELETE'])
+@jwt_required()
+def Deletar_Item():
+    data = request.get_json()
+    delete_item(**data)
+    return jsonify({"msg": "Item deletado com sucesso"}), 200
 
 #__________________________Rotas_de_Proteção_______________________#
 
@@ -109,5 +127,4 @@ def Protected():
 
     current_user = get_jwt_identity()
     print(current_user)
-    print(request.get_data())
     return jsonify(logged_in_as=current_user), 200

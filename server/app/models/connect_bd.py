@@ -2,8 +2,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 from app.models.model import Person, Item
-from app.models.connectar_bd import connecting_bd
+from app.models.connectar_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
+import json
 
 
 #________________________________Pessoas___________________________________#
@@ -142,6 +143,8 @@ def register_item(**kwargs):
 
 
 def list_itens(id_pessoa):
+
+    print(id_pessoa)
     
     """Lista todos os itens da lista"""
     
@@ -151,10 +154,21 @@ def list_itens(id_pessoa):
     
         if session is not None:
     
-            query = session.query(Item).filter(Item.pessoa_id == id_pessoa)
+            query = session.query(Item).filter(Item.person_cpf == id_pessoa)
+
+            items = query.all()
+
+            items_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for item in items:
+
+                items_dicts.append(sqlalchemy_to_dict(item)) 
             
-            return query.all()
-    
+            print("a\na\na\na\na\na\na\na\na\na\na\na\na\na\n",f'{items_dicts}')
+         
+            return items_dicts
+         
     except Exception as e:
     
         print("Erro na consulta:", e)
@@ -205,7 +219,7 @@ def edit_item(id_item, **kwargs):
             session.close()
 
 
-def dellete_item(id_item):
+def delete_item(id_item):
         
         """Exclui um item da lista"""
         

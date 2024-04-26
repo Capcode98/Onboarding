@@ -76,16 +76,29 @@ class Item(Base):
     task = Column(Text) 
     status_of_task = Column(Enum('Em Espera', 'Iniciado', 'Finalizado'))  
     create_at = Column(DateTime)
-    final_at = Column(DateTime)
-    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'))   
+    init_at = Column(DateTime)
+    finish_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)   
 
-    def __init__(self, tilulo, tarefa, estatus_da_tarefa, data_de_finalizacao, pessoa_id):
+    __table_args__ = (
+        UniqueConstraint('title', name='_title_uc'),  # Garante que o titulo seja único
+    )  
+
+    def __init__(self, tilulo, tarefa, estatus_da_tarefa, data_de_inicio, data_de_finalizacao, pessoa_id):
         self.title = tilulo
         self.task = tarefa
         self.status_of_task = estatus_da_tarefa
         self.create_at = datetime.now()
-        self.final_at = data_de_finalizacao
+        self.init_at = virify_date(data_menor=datetime.now(),data_maior=data_de_inicio,param="início")
+        self.finish_at = virify_date(data_menor=data_de_inicio,data_maior=data_de_finalizacao,param="finalização")
         self.person_cpf = pessoa_id
 
+        def virify_date(data_menor,data_maior,param):
+            if data_menor <= data_maior:
+                return data_maior
+            else:
+                return ValueError(f"Data de {param} menor que a data de início da tarefa")
+    
+    
 engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
 Base.metadata.create_all(engine)
