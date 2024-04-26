@@ -141,10 +141,8 @@ def register_item(**kwargs):
     
             session.close()
 
-
+#FUNCIONANDO
 def list_itens(id_pessoa):
-
-    print(id_pessoa)
     
     """Lista todos os itens da lista"""
     
@@ -164,8 +162,6 @@ def list_itens(id_pessoa):
             for item in items:
 
                 items_dicts.append(sqlalchemy_to_dict(item)) 
-            
-            print("a\na\na\na\na\na\na\na\na\na\na\na\na\na\n",f'{items_dicts}')
          
             return items_dicts
          
@@ -219,7 +215,7 @@ def edit_item(id_item, **kwargs):
             session.close()
 
 
-def delete_item(id_item):
+def delete_item(id_pessoa, id_item):
         
         """Exclui um item da lista"""
         
@@ -229,7 +225,7 @@ def delete_item(id_item):
         
             if session is not None:
         
-                query = session.query(Item).filter(Item.id == id_item)
+                query = session.query(Item).filter(Item.person_cpf == id_pessoa).filter(Item.id == id_item)
         
                 item = query.one()
         

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Enum, Text, DECIMAL, UniqueConstraint, ForeignKey, DateTime, BinaryExpression, BINARY, BLOB
+from sqlalchemy import Column, Integer, String, Date, Enum, Text, DECIMAL, UniqueConstraint, ForeignKey, DateTime, BLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from hashlib import sha256
