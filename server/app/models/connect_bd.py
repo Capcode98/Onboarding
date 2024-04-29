@@ -1,10 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 from app.models.model import Person, Item
-from app.models.connectar_bd import connecting_bd, sqlalchemy_to_dict
+from app.models.connecting_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
-import json
 
 
 #________________________________Pessoas___________________________________#
@@ -129,7 +127,7 @@ def register_item(**kwargs):
     
     except SQLAlchemyError as e:
     
-        print("Erro ao item pessoa:", e)
+        print("Erro ao cadastrar o item:", e)
     
         session.rollback()
         
@@ -176,7 +174,7 @@ def list_itens(id_pessoa):
             session.close()
 
 
-def edit_item(id_item, **kwargs):
+def edit_item(id_item,id_pessoa, **kwargs):
     
     """Edita os campos de um item da lista"""
     
@@ -186,11 +184,14 @@ def edit_item(id_item, **kwargs):
     
         if session is not None:
     
-            query = session.query(Item).filter(Item.id == id_item)
+            query = session.query(Item).filter(Item.person_cpf == id_pessoa).filter(Item.id == id_item)
     
             item = query.one()
+
+            #TA DANDO XABU AQUI
     
             for key, value in kwargs.items():
+                print(key,value)
     
                 setattr(item, key, value)
     
@@ -198,9 +199,9 @@ def edit_item(id_item, **kwargs):
     
             print("Item editado com sucesso")
     
-    except NoResultFound:
+    except NoResultFound as e:
     
-        print("Item não encontrado")
+        raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
     
     except Exception as e:
     
@@ -237,7 +238,7 @@ def delete_item(id_pessoa, id_item):
         
         except NoResultFound:
         
-            print("Item não encontrado")
+            raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
         
         except Exception as e:
         

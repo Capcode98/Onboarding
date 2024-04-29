@@ -20,8 +20,9 @@ def sqlalchemy_to_dict(obj):
     # Inicializa um dicionário vazio para armazenar os atributos
     data = {}
     # Itera sobre cada coluna do mapeamento
+
     for column in mapper.columns:
         # Adiciona o nome da coluna e o valor correspondente ao dicionário
         data[column.key] = getattr(obj, column.key)
-    print(data)
+    
     return data

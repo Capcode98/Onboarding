@@ -68,6 +68,20 @@ class Person(Base):
     def get_cpf(self):
         return self.cpf
 
+def virify_date(data_menor,data_maior,param):
+    data_maior=datetime.strptime(data_maior, "%Y-%m-%d %H:%M:%S")
+    if param == "finalização":
+        data_menor = datetime.strptime(data_menor, "%Y-%m-%d %H:%M:%S")
+        if data_menor <= data_maior:
+            return data_maior
+        else:
+            raise ValueError(f"Data de {param} menor que a data de início da tarefa")
+    else:
+        if data_menor <= data_maior:
+            return data_maior
+        else:
+            raise ValueError(f"Data de {param} menor que a data de criação da tarefa")
+
 class Item(Base):
     __tablename__ = 'checklist'
 
@@ -80,6 +94,7 @@ class Item(Base):
     finish_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)   
 
+    #tirar isso, pq assim outros usuarios não poderam ter tarefas com o mesmo nome mesmo que as tarefas existentes sejam de outro usuario
     __table_args__ = (
         UniqueConstraint('title', name='_title_uc'),  # Garante que o titulo seja único
     )  
@@ -93,11 +108,6 @@ class Item(Base):
         self.finish_at = virify_date(data_menor=data_de_inicio,data_maior=data_de_finalizacao,param="finalização")
         self.person_cpf = pessoa_id
 
-        def virify_date(data_menor,data_maior,param):
-            if data_menor <= data_maior:
-                return data_maior
-            else:
-                return ValueError(f"Data de {param} menor que a data de início da tarefa")
     
     
 engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
