@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Date, Enum, Text, DECIMAL, UniqueConstraint, ForeignKey, DateTime, BLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from app.models.utils_bd import virify_date
 from hashlib import sha256
 from datetime import datetime
 
@@ -39,48 +40,35 @@ class Person(Base):
         UniqueConstraint('cpf','rg', 'email', name='_cpf_rg_email_uc'),  # Garante que tanto CPF quanto email sejam únicos
     )    
 
-    def __init__(self, nome, senha, email, telefone, endereco, cidade, estado, pais, cep, cpf, rg, data_nascimento, sexo, estado_civil, profissao, salario, escolaridade, idioma, habilidades, experiencia, objetivo, foto, curriculo):
-        self.name = nome
-        self.password = sha256(senha.encode()).digest()
+    def __init__(self, name, password, email, phone, address, city, state, country, cep, cpf, rg, birth_date, sex, civil_status, profession, salary,
+                  schooling, language, skills, experience, objective, photo, cv):
+        self.name = name
+        self.password = sha256(password.encode()).digest()
         self.email = email
-        self.phone = telefone
-        self.address = endereco
-        self.city = cidade
-        self.state = estado
-        self.country = pais
+        self.phone = phone
+        self.address = address
+        self.city = city
+        self.state = state
+        self.country = country
         self.cep = cep
         self.cpf = cpf
         self.rg = rg
-        self.birth_date = data_nascimento
-        self.sex = sexo
-        self.civil_status = estado_civil
-        self.profession = profissao
-        self.salary = salario
-        self.schooling = escolaridade
-        self.language = idioma
-        self.skills = habilidades
-        self.experience = experiencia
-        self.objective = objetivo
-        self.photo = foto
-        self.cv = curriculo
+        self.birth_date = birth_date
+        self.sex = sex
+        self.civil_status = civil_status
+        self.profession = profession
+        self.salary = salary
+        self.schooling = schooling
+        self.language = language
+        self.skills = skills
+        self.experience = experience
+        self.objective = objective
+        self.photo = photo
+        self.cv = cv
         self.create_at = datetime.now()
     
     def get_cpf(self):
         return self.cpf
-
-def virify_date(data_menor,data_maior,param):
-    data_maior=datetime.strptime(data_maior, "%Y-%m-%d %H:%M:%S")
-    if param == "finalização":
-        data_menor = datetime.strptime(data_menor, "%Y-%m-%d %H:%M:%S")
-        if data_menor <= data_maior:
-            return data_maior
-        else:
-            raise ValueError(f"Data de {param} menor que a data de início da tarefa")
-    else:
-        if data_menor <= data_maior:
-            return data_maior
-        else:
-            raise ValueError(f"Data de {param} menor que a data de criação da tarefa")
 
 class Item(Base):
     __tablename__ = 'checklist'
@@ -92,21 +80,45 @@ class Item(Base):
     create_at = Column(DateTime)
     init_at = Column(DateTime)
     finish_at = Column(DateTime)
-    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)   
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
 
-    #tirar isso, pq assim outros usuarios não poderam ter tarefas com o mesmo nome mesmo que as tarefas existentes sejam de outro usuario
-    __table_args__ = (
-        UniqueConstraint('title', name='_title_uc'),  # Garante que o titulo seja único
-    )  
-
-    def __init__(self, tilulo, tarefa, estatus_da_tarefa, data_de_inicio, data_de_finalizacao, pessoa_id):
-        self.title = tilulo
-        self.task = tarefa
-        self.status_of_task = estatus_da_tarefa
+    def __init__(self, title, task, status_of_task, init_at, finish_at, person_cpf):
+        self.title = title
+        self.task = task
+        self.status_of_task = status_of_task
         self.create_at = datetime.now()
-        self.init_at = virify_date(data_menor=datetime.now(),data_maior=data_de_inicio,param="início")
-        self.finish_at = virify_date(data_menor=data_de_inicio,data_maior=data_de_finalizacao,param="finalização")
-        self.person_cpf = pessoa_id
+        self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
+        self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
+        self.person_cpf = person_cpf
+
+#NÃO UTILIZADO POR ENQUANTO
+class Token(Base):
+    __tablename__ = 'tokens'
+
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), nullable=False)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, token, person_cpf):
+        self.token = token
+        self.person_cpf = person_cpf
+
+class Feedback(Base):
+    __tablename__ = 'feedbacks'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100), nullable=False)
+    description = Column(Text)
+    avaliation = Column(Enum('Ruim', 'Regular', 'Bom', 'Ótimo'))  
+    create_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, title, description, avaliation, person_cpf):
+        self.title = title
+        self.description = description
+        self.avaliation = avaliation
+        self.create_at = datetime.now()
+        self.person_cpf = person_cpf
 
     
     

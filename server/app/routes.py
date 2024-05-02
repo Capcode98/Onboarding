@@ -2,7 +2,7 @@ from flask import request, jsonify, render_template
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback
 from app import app
 
 
@@ -96,6 +96,14 @@ def Logout():
     return jsonify({"msg": "Logout realizado com sucesso"}), 200
 
 #__________________________Rotas_de_Criação,_Deleção_e_Alteração_de_Itens_____________________#
+
+@app.route('/itens', methods=['GET'])
+@jwt_required()
+def Listar_Itens():
+
+    dict_items = list_itens(get_jwt_identity())
+    return jsonify(dict_items),200
+
 @app.route('/itens', methods=['POST'])
 @jwt_required()
 def Criar_Itens():
@@ -104,7 +112,7 @@ def Criar_Itens():
 
     try:
         register_item(**data)
-        return jsonify({"msg": f"Itens criado com sucesso \n {request.get_json()}"}), 200
+        return jsonify({"msg": f"Itens criado com sucesso"}, request.get_json()), 200
     
     except Exception as e:
         return jsonify({"msg": f"Erro ao criar item. {e}"}), 500
@@ -116,19 +124,11 @@ def Atualizar_Item():
     data = request.get_json()
 
     try:
-        #Adicionar uma verificação para ver se o item pertence ao usuário logado
         edit_item(id_item=request.json.get("id"),id_pessoa=get_jwt_identity(),**data)
         return jsonify({"msg": "Item atualizado com sucesso"}), 200
     
     except Exception as e:
         return jsonify({"msg": f"Erro ao editar item. {e}"}), 500
-
-@app.route('/itens', methods=['GET'])
-@jwt_required()
-def Listar_Itens():
-
-    dict_items = list_itens(get_jwt_identity())
-    return jsonify(dict_items),200
 
 @app.route('/itens', methods=['DELETE'])
 @jwt_required()
@@ -136,6 +136,28 @@ def Deletar_Item():
 
     delete_item(id_item=request.json.get("id"),id_pessoa=get_jwt_identity())
     return jsonify({"msg": "Item deletado com sucesso"}), 200
+
+#__________________________Rotas_de_FeedBacks_______________________#
+
+@app.route('/feedback', methods=['POST'])
+@jwt_required()
+def Cadastrar_Feedback():
+
+    data = request.get_json()
+
+    try:
+        register_feedback(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"Feedback cadastrado com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar Feedback. {e}"}), 500
+
+@app.route('/avaliacoes', methods=['GET'])
+@jwt_required()
+def Listar_Avaliações():
+
+    return jsonify({"msg": "Avaliações listadas com sucesso"}), 200, {'Access-Control-Allow-Origin': '*'}   
+
 
 #__________________________Rotas_de_Proteção_______________________#
 

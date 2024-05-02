@@ -1,7 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.model import Person, Item
-from app.models.connecting_bd import connecting_bd, sqlalchemy_to_dict
+from app.models.model import Person, Item, Feedback
+from app.models.utils_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
 
 
@@ -38,7 +38,6 @@ def login(login, password):
     
             session.close()
 
-
 #FUNCIONANDO
 def register_person(**kwargs):
 
@@ -72,7 +71,7 @@ def register_person(**kwargs):
     
             session.close()
 
-
+#VERIFICAR SE FUNCIONA
 def edit_person(login1,password1,**kwargs):
 
     '''Edita um ou mais campos de uma pessoa'''
@@ -104,7 +103,7 @@ def edit_person(login1,password1,**kwargs):
             session.close()
 
 
-#_____________________________Item_da_Lista________________________________#
+#_____________________________Item_do_CheckList________________________________#
 
 #FUNCIONANDO
 def register_item(**kwargs):
@@ -173,7 +172,7 @@ def list_itens(id_pessoa):
     
             session.close()
 
-
+#FUNCIONANDO
 def edit_item(id_item,id_pessoa, **kwargs):
     
     """Edita os campos de um item da lista"""
@@ -187,14 +186,11 @@ def edit_item(id_item,id_pessoa, **kwargs):
             query = session.query(Item).filter(Item.person_cpf == id_pessoa).filter(Item.id == id_item)
     
             item = query.one()
-
-            #TA DANDO XABU AQUI
     
             for key, value in kwargs.items():
-                print(key,value)
-    
+
                 setattr(item, key, value)
-    
+
             session.commit()
     
             print("Item editado com sucesso")
@@ -215,7 +211,7 @@ def edit_item(id_item,id_pessoa, **kwargs):
     
             session.close()
 
-
+#FUNCIONANDO
 def delete_item(id_pessoa, id_item):
         
         """Exclui um item da lista"""
@@ -252,4 +248,37 @@ def delete_item(id_pessoa, id_item):
         
                 session.close()
 
+#_____________________________Item_do_FeedBack________________________________#
 
+#FUNCIONANDO
+def register_feedback(id_pessoa,**kwargs):
+
+    '''Adiciona um feedback na lista'''
+    
+    try:
+    
+        session = connecting_bd()
+    
+        if session is not None:
+    
+            feedback = Feedback(**kwargs)
+    
+            session.add(feedback)
+    
+            session.commit()
+    
+            print("Cadastro do feedback realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar o feedback:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
