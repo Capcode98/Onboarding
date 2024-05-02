@@ -261,7 +261,7 @@ def register_feedback(id_pessoa,**kwargs):
     
         if session is not None:
     
-            feedback = Feedback(**kwargs)
+            feedback = Feedback(**kwargs,person_cpf=id_pessoa)
     
             session.add(feedback)
     
@@ -276,6 +276,40 @@ def register_feedback(id_pessoa,**kwargs):
         session.rollback()
         
         raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+#FUNCIONANDO
+def list_feedbacks():
+    
+    """Lista todos os feedbacks da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Feedback)
+
+            feedbacks = query.all()
+
+            feedbacks_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for feedback in feedbacks:
+
+                feedbacks_dicts.append(sqlalchemy_to_dict(feedback)) 
+         
+            return feedbacks_dicts
+         
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
     
     finally:
     

@@ -2,7 +2,7 @@ from flask import request, jsonify, render_template
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks
 from app import app
 
 
@@ -139,6 +139,12 @@ def Deletar_Item():
 
 #__________________________Rotas_de_FeedBacks_______________________#
 
+@app.route('/avaliacoes', methods=['GET'])
+@jwt_required()
+def Listar_Avaliações():
+
+    return jsonify(list_feedbacks()), 200  
+
 @app.route('/feedback', methods=['POST'])
 @jwt_required()
 def Cadastrar_Feedback():
@@ -151,13 +157,6 @@ def Cadastrar_Feedback():
     
     except Exception as e:
         return jsonify({"msg": f"Erro ao criar Feedback. {e}"}), 500
-
-@app.route('/avaliacoes', methods=['GET'])
-@jwt_required()
-def Listar_Avaliações():
-
-    return jsonify({"msg": "Avaliações listadas com sucesso"}), 200, {'Access-Control-Allow-Origin': '*'}   
-
 
 #__________________________Rotas_de_Proteção_______________________#
 

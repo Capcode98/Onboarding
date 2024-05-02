@@ -109,7 +109,7 @@ class Feedback(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(100), nullable=False)
     description = Column(Text)
-    avaliation = Column(Enum('Ruim', 'Regular', 'Bom', 'Ótimo'))  
+    avaliation = Column(Enum('Ruim', 'Regular', 'Bom','Incrivel', 'Adorei','Ótimo'))  
     create_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
 
@@ -120,7 +120,6 @@ class Feedback(Base):
         self.create_at = datetime.now()
         self.person_cpf = person_cpf
 
-    
     
 engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
 Base.metadata.create_all(engine)
