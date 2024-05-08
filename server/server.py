@@ -1,5 +1,4 @@
-from app import app as application, auth
-
+from app import app, auth, socketIo
 
 if __name__ == "__main__":
-    application.run()
+    socketIo.run(app)

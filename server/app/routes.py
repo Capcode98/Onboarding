@@ -1,9 +1,10 @@
 from flask import request, jsonify, render_template
+from flask_socketio import send, emit
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks
-from app import app
+from app import app,socketIo
 
 
 def create_token(request):
@@ -157,6 +158,17 @@ def Cadastrar_Feedback():
     
     except Exception as e:
         return jsonify({"msg": f"Erro ao criar Feedback. {e}"}), 500
+
+#__________________________Rota_de_Chat_______________________#
+
+@app.route('/chat')
+@app.route('/chat.html')
+def chat():
+    return render_template('chat.html')
+
+@socketIo.on('message')
+def handleMessage(msg):
+    send(msg, broadcast=True)
 
 #__________________________Rotas_de_Proteção_______________________#
 
