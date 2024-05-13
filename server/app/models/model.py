@@ -70,6 +70,20 @@ class Person(Base):
     def get_cpf(self):
         return self.cpf
 
+#NÃO UTILIZADO POR ENQUANTO
+class Token(Base):
+    __tablename__ = 'tokens'
+
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), nullable=False)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, token, person_cpf):
+        self.token = token
+        self.person_cpf = person_cpf
+
+#======================ADICIONADO=POR=CONTA=DO=FRONT======================================
+
 class Item(Base):
     __tablename__ = 'checklist'
 
@@ -89,18 +103,6 @@ class Item(Base):
         self.create_at = datetime.now()
         self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
         self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
-        self.person_cpf = person_cpf
-
-#NÃO UTILIZADO POR ENQUANTO
-class Token(Base):
-    __tablename__ = 'tokens'
-
-    id = Column(Integer, primary_key=True)
-    token = Column(String(255), nullable=False)
-    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
-
-    def __init__(self, token, person_cpf):
-        self.token = token
         self.person_cpf = person_cpf
 
 class Feedback(Base):

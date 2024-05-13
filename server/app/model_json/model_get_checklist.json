@@ -1,0 +1,28 @@
+[
+    {
+        "title" : "Reuniões",
+        "list" : [
+            {
+                "name" : "Reunião com RH",
+                "date" : "2023-09-15T17:06:54",
+                "is_check" : false
+            },
+            {
+                "name" : "Reunião com TI",
+                "date" : "2023-09-15T17:06:54",
+                "is_check" : true
+            }
+        ]
+    }
+  ,
+    {
+        "title" : "Treinamentos",
+        "list" : [
+            {
+                "name" : "Brigada de incêndio",
+                "date" : "2023-09-15T17:06:54",
+                "is_check" : true
+            }
+        ]
+    }
+  ]

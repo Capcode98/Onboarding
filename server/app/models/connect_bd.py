@@ -102,7 +102,6 @@ def edit_person(login1,password1,**kwargs):
     
             session.close()
 
-
 #_____________________________Item_do_CheckList________________________________#
 
 #FUNCIONANDO

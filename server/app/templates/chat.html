@@ -101,7 +101,7 @@
                 socket.on("connect", function() {
                 });
             }
-            conneting("http://192.168.1.6")
+            conneting("http://10.0.36.35")
             socket.on("message", function(data) {
             console.log("enviou mensagem");
             $("#chat-container").append($('<p>').text(data));
