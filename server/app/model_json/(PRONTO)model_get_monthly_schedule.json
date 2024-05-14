@@ -6,12 +6,11 @@
                 "name" : "Reunião com RH",
                 "init_at" : "2023-09-15T17:06:54",
                 "final_at" : "2023-09-15T17:08:54"
-                
             },
             {
-                "name" : "Reunião com TI",
-                "date" : "2023-09-15T17:06:54",
-                "is_check" : true
+                "name" : "Reunião com RH",
+                "init_at" : "2023-09-15T17:06:54",
+                "final_at" : "2023-09-15T17:08:54"
             }
         ]
     }
@@ -20,9 +19,9 @@
         "title" : "Treinamentos",
         "list" : [
             {
-                "name" : "Brigada de incêndio",
-                "date" : "2023-09-15T17:06:54",
-                "is_check" : true
+                "name" : "Reunião com RH",
+                "init_at" : "2023-09-15T17:06:54",
+                "final_at" : "2023-09-15T17:08:54"
             }
         ]
     }
