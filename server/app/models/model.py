@@ -84,8 +84,9 @@ class Token(Base):
         self.token = token
         self.person_cpf = person_cpf
 
-#======================ADICIONADO=POR=CONTA=DO=FRONT======================================
+#_______________________ADICIONADO_POR_CONTA_DO_FRONT_____________________________
 
+#===================================CHECKLIST=====================================
 #ESTA COMO DEVE SER
 class CheckList(Base):
     __tablename__ = 'checklist'
@@ -108,12 +109,13 @@ class CheckList(Base):
         self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
         self.person_cpf = person_cpf
 
+#==================================FEEDBACK=======================================
 #ESTA COMO DEVE SER
 class Feedback(Base):
     __tablename__ = 'feedbacks'
 
     id = Column(Integer, primary_key=True)
-    comment = Column(String(200), nullable=False)
+    comment = Column(Text, nullable=False)
     rating = Column(Enum('0', '1', '2','3', '4','5'))  
     create_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
@@ -124,6 +126,7 @@ class Feedback(Base):
         self.create_at = datetime.now()
         self.person_cpf = person_cpf
 
+#===============================QUESTIONS=AND=ANSWERS=============================
 #ESTA COMO DEVE SER
 class Question(Base):
     __tablename__ = 'questions'
@@ -148,11 +151,50 @@ class Answer(Base):
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
     id_question = Column(Integer, ForeignKey('questions.id'), nullable=False)
 
-    def __init__(self, answer, person_cpf):
+    def __init__(self, answer, person_cpf, id_question):
         self.answer = answer
         self.create_at = datetime.now()
         self.person_cpf = person_cpf
+        self.id_question = id_question
 
-    
+#=============================MEETING=AND=TRAINING===============================
+#ESTA COMO DEVE SER
+class Meeting(Base):
+    __tablename__ = 'meetings'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100), nullable=False) 
+    create_at = Column(DateTime)
+    init_at = Column(DateTime)
+    finish_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, title, init_at, finish_at, person_cpf):
+        self.title = title
+        self.create_at = datetime.now()
+        self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
+        self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
+        self.person_cpf = person_cpf
+
+#ESTA COMO DEVE SER
+class Training(Base):
+    __tablename__ = 'trainings'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100), nullable=False)
+    create_at = Column(DateTime)
+    init_at = Column(DateTime)
+    finish_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, title, init_at, finish_at, person_cpf):
+        self.title = title
+
+        self.create_at = datetime.now()
+        self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
+        self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
+        self.person_cpf = person_cpf
+#======================ADICIONADO=POR=CONTA=DO=FRONT======================================
+
 engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
 Base.metadata.create_all(engine)

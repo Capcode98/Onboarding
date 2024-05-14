@@ -4,8 +4,9 @@
         "list" : [
             {
                 "name" : "Reunião com RH",
-                "date" : "2023-09-15T17:06:54",
-                "is_check" : false
+                "init_at" : "2023-09-15T17:06:54",
+                "final_at" : "2023-09-15T17:08:54"
+                
             },
             {
                 "name" : "Reunião com TI",
