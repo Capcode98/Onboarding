@@ -157,7 +157,7 @@ class Answer(Base):
         self.person_cpf = person_cpf
         self.id_question = id_question
 
-#=============================MEETING=AND=TRAINING===============================
+#=============================MEETING=AND=TRAINING================================
 #ESTA COMO DEVE SER
 class Meeting(Base):
     __tablename__ = 'meetings'
@@ -194,7 +194,7 @@ class Training(Base):
         self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
         self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
         self.person_cpf = person_cpf
-#======================ADICIONADO=POR=CONTA=DO=FRONT======================================
+#======================ADICIONADO=POR=CONTA=DO=FRONT==============================
 
 engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
 Base.metadata.create_all(engine)
