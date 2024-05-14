@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required
 from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks
 from app import app,socketIo
 
+#__________________________Criação_de_Token_______________________________#
 
 def create_token(request):
     access_token = create_access_token(identity=request.json.get("cpf"))

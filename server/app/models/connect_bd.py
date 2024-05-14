@@ -182,7 +182,7 @@ def edit_item(id_item,id_pessoa, **kwargs):
     
         if session is not None:
     
-            query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(Item.id == id_item)
+            query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(CheckList.id == id_item)
     
             item = query.one()
     
