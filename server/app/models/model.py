@@ -7,6 +7,7 @@ from datetime import datetime
 
 Base = declarative_base()
 
+#ESTA COMO DEVE SER
 class Person(Base):
     __tablename__ = 'pessoas'
 
@@ -71,6 +72,7 @@ class Person(Base):
         return self.cpf
 
 #NÃO UTILIZADO POR ENQUANTO
+#ESTA COMO DEVE SER
 class Token(Base):
     __tablename__ = 'tokens'
 
@@ -84,7 +86,8 @@ class Token(Base):
 
 #======================ADICIONADO=POR=CONTA=DO=FRONT======================================
 
-class Item(Base):
+#ESTA COMO DEVE SER
+class CheckList(Base):
     __tablename__ = 'checklist'
 
     id = Column(Integer, primary_key=True)
@@ -105,20 +108,48 @@ class Item(Base):
         self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
         self.person_cpf = person_cpf
 
+#ESTA COMO DEVE SER
 class Feedback(Base):
     __tablename__ = 'feedbacks'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(100), nullable=False)
-    description = Column(Text)
-    avaliation = Column(Enum('Ruim', 'Regular', 'Bom','Incrivel', 'Adorei','Ótimo'))  
+    comment = Column(String(200), nullable=False)
+    rating = Column(Enum('0', '1', '2','3', '4','5'))  
     create_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
 
-    def __init__(self, title, description, avaliation, person_cpf):
-        self.title = title
-        self.description = description
-        self.avaliation = avaliation
+    def __init__(self, comment, rating, person_cpf):
+        self.comment = comment
+        self.rating = rating
+        self.create_at = datetime.now()
+        self.person_cpf = person_cpf
+
+#ESTA COMO DEVE SER
+class Question(Base):
+    __tablename__ = 'questions'
+
+    id = Column(Integer, primary_key=True)
+    question = Column(Text) 
+    create_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+
+    def __init__(self, question, person_cpf):
+        self.question = question
+        self.create_at = datetime.now()
+        self.person_cpf = person_cpf
+
+#ESTA COMO DEVE SER
+class Answer(Base):
+    __tablename__ = 'answers'
+
+    id = Column(Integer, primary_key=True)
+    answer = Column(Text) 
+    create_at = Column(DateTime)
+    person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+    id_question = Column(Integer, ForeignKey('questions.id'), nullable=False)
+
+    def __init__(self, answer, person_cpf):
+        self.answer = answer
         self.create_at = datetime.now()
         self.person_cpf = person_cpf
 

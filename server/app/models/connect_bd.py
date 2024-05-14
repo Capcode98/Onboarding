@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.model import Person, Item, Feedback
+from app.models.model import Person, CheckList, Feedback
 from app.models.utils_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
 
@@ -115,7 +115,7 @@ def register_item(**kwargs):
     
         if session is not None:
     
-            item = Item(**kwargs)
+            item = CheckList(**kwargs)
     
             session.add(item)
     
@@ -148,7 +148,7 @@ def list_itens(id_pessoa):
     
         if session is not None:
     
-            query = session.query(Item).filter(Item.person_cpf == id_pessoa)
+            query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa)
 
             items = query.all()
 
@@ -182,7 +182,7 @@ def edit_item(id_item,id_pessoa, **kwargs):
     
         if session is not None:
     
-            query = session.query(Item).filter(Item.person_cpf == id_pessoa).filter(Item.id == id_item)
+            query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(Item.id == id_item)
     
             item = query.one()
     
@@ -221,7 +221,7 @@ def delete_item(id_pessoa, id_item):
         
             if session is not None:
         
-                query = session.query(Item).filter(Item.person_cpf == id_pessoa).filter(Item.id == id_item)
+                query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(CheckList.id == id_item)
         
                 item = query.one()
         
