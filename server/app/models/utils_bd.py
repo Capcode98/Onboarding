@@ -1,13 +1,14 @@
 from sqlalchemy.orm import sessionmaker, class_mapper
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import create_engine
 from datetime import datetime
+from sqlalchemy import create_engine
+import os
 
 
 def connecting_bd():
 
     try:
-        engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
+        engine = create_engine(f'mysql+mysqlconnector://root:{os.environ.get('MYSQL_SECRET')}@localhost/{os.environ.get('MYSQL_DATABASE_NAME')}')
         Session = sessionmaker(bind=engine)
         return Session()
     

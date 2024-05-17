@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from app.models.utils_bd import virify_date
 from hashlib import sha256
 from datetime import datetime
+import os
 
 Base = declarative_base()
 
@@ -77,12 +78,15 @@ class Token(Base):
     __tablename__ = 'tokens'
 
     id = Column(Integer, primary_key=True)
-    token = Column(String(255), nullable=False)
+    token = Column(Text, nullable=False)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
+    create_at = Column(DateTime, nullable=False)
+
 
     def __init__(self, token, person_cpf):
         self.token = token
         self.person_cpf = person_cpf
+        self.create_at = datetime.now()
 
 #_______________________ADICIONADO_POR_CONTA_DO_FRONT_____________________________
 
@@ -196,5 +200,5 @@ class Training(Base):
         self.person_cpf = person_cpf
 #======================ADICIONADO=POR=CONTA=DO=FRONT==============================
 
-engine = create_engine('mysql+mysqlconnector://root:Jl04081998@localhost/db_onboarding')
+engine = create_engine(f'mysql+mysqlconnector://root:{os.environ.get('MYSQL_SECRET')}@localhost/{os.environ.get('MYSQL_DATABASE_NAME')}')
 Base.metadata.create_all(engine)

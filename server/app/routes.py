@@ -3,13 +3,14 @@ from flask_socketio import send, emit
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks
-from app import app,socketIo
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token
+from app import app, socketIo
 
 #__________________________Criação_de_Token_______________________________#
 
 def create_token(request):
     access_token = create_access_token(identity=request.json.get("cpf"))
+    register_token(token=access_token, person_cpf=request.json.get("cpf"))
     return access_token
 
 #__________________________Rotas_de_Painas_Estáticas_______________________#
@@ -83,7 +84,7 @@ def Cadastro():
     try:
         data = request.get_json()
         register_person(**data)
-        access_token = create_access_token(identity=request.json.get("cpf"))
+        access_token = create_token(request=request)
         return jsonify({"msg": "Cadastro realizado com sucesso","token":f"{access_token}"}), 201
     
     except Exception as e:

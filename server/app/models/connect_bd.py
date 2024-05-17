@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.model import Person, CheckList, Feedback
+from app.models.model import Person, CheckList, Feedback, Token
 from app.models.utils_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
 
@@ -102,7 +102,42 @@ def edit_person(login1,password1,**kwargs):
     
             session.close()
 
-#_____________________________Item_do_CheckList________________________________#
+#________________________________Token___________________________________#
+
+#NÃO UTILIZADO POR ENQUANTO
+def register_token(token, person_cpf):
+    
+        '''Adiciona um token na lista'''
+        
+        try:
+        
+            session = connecting_bd()
+        
+            if session is not None:
+        
+                token1 = Token(token, person_cpf)
+        
+                session.add(token1)
+        
+                session.commit()
+        
+                print("Cadastro do token realizado com sucesso")
+        
+        except SQLAlchemyError as e:
+        
+            print("Erro ao cadastrar o token:", e)
+        
+            session.rollback()
+            
+            raise e 
+        
+        finally:
+        
+            if session:
+        
+                session.close()
+
+#_____________________________Funções_do_CheckList________________________________#
 
 #FUNCIONANDO
 def register_item(**kwargs):
@@ -247,7 +282,7 @@ def delete_item(id_pessoa, id_item):
         
                 session.close()
 
-#_____________________________Item_do_FeedBack________________________________#
+#_____________________________Funções_do_FeedBack________________________________#
 
 #FUNCIONANDO
 def register_feedback(id_pessoa,**kwargs):
@@ -315,3 +350,5 @@ def list_feedbacks():
         if session:
     
             session.close()
+
+#_____________________________Funções_do_Monthly_Schedule_________________________________#
