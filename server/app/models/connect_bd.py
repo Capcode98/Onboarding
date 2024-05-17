@@ -104,7 +104,7 @@ def edit_person(login1,password1,**kwargs):
 
 #________________________________Token___________________________________#
 
-#NÃO UTILIZADO POR ENQUANTO
+#FUNCIONANDO
 def register_token(token, person_cpf):
     
         '''Adiciona um token na lista'''
@@ -115,7 +115,7 @@ def register_token(token, person_cpf):
         
             if session is not None:
         
-                token1 = Token(token, person_cpf)
+                token1 = Token(token, person_cpf,state_of="Activated")
         
                 session.add(token1)
         
@@ -130,6 +130,39 @@ def register_token(token, person_cpf):
             session.rollback()
             
             raise e 
+        
+        finally:
+        
+            if session:
+        
+                session.close()
+
+#FUNCIONANDO
+def transform_the_last_token_in_expired(person_cpf):
+        
+        '''Transforma o último token em expirado'''
+        
+        try:
+        
+            session = connecting_bd()
+        
+            if session is not None:
+        
+                query = session.query(Token).filter(Token.person_cpf == person_cpf).filter(Token.state_of == "Activated")
+        
+                token = query.one()
+                print(token)
+                token.state_of = "Expireted"
+        
+                session.commit()
+        
+                print("Token expirado com sucesso")
+        
+        except Exception as e:
+        
+            print("Erro ao expirar token:", e)
+        
+            session.rollback()
         
         finally:
         

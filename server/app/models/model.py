@@ -72,7 +72,6 @@ class Person(Base):
     def get_cpf(self):
         return self.cpf
 
-#NÃO UTILIZADO POR ENQUANTO
 #ESTA COMO DEVE SER
 class Token(Base):
     __tablename__ = 'tokens'
@@ -81,12 +80,14 @@ class Token(Base):
     token = Column(Text, nullable=False)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
     create_at = Column(DateTime, nullable=False)
+    state_of = Column(Enum("Activated", "Expireted"))
 
 
-    def __init__(self, token, person_cpf):
+    def __init__(self, token, person_cpf, state_of):
         self.token = token
         self.person_cpf = person_cpf
         self.create_at = datetime.now()
+        self.state_of = state_of
 
 #_______________________ADICIONADO_POR_CONTA_DO_FRONT_____________________________
 

@@ -3,14 +3,23 @@ from flask_socketio import send, emit
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token, transform_the_last_token_in_expired
 from app import app, socketIo
 
 #__________________________Criação_de_Token_______________________________#
 
-def create_token(request):
-    access_token = create_access_token(identity=request.json.get("cpf"))
-    register_token(token=access_token, person_cpf=request.json.get("cpf"))
+def create_token(request=None,identity=None):
+
+    if(identity):
+        access_token = create_access_token(identity=identity)
+        transform_the_last_token_in_expired(person_cpf=identity)
+        register_token(token=access_token, person_cpf=identity)
+
+    else:
+        identity=request.json.get("cpf")
+        access_token = create_access_token(identity=identity)
+        register_token(token=access_token, person_cpf=identity)
+
     return access_token
 
 #__________________________Rotas_de_Painas_Estáticas_______________________#
@@ -67,7 +76,7 @@ def Login():
         person = login(**data)
 
         if person is not None:
-            access_token = create_access_token(identity=person.get_cpf())
+            access_token = create_token(identity=person.get_cpf())
             return jsonify({"msg": "Login realizado com sucesso","token":f"{access_token}"}), 200
         
         else:
