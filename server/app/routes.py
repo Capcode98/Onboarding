@@ -65,7 +65,7 @@ def Documentation():
 
     return render_template("documentation.html")
 
-#__________________________Rotas_de_Autenticação_de_Pessoa_______________________#
+#__________________________Rotas_de_Criação,_Deleção_e_Alteração_de_Pessoa_______________________#
 
 @app.route('/login', methods=['POST'])
 def Login():
@@ -149,7 +149,7 @@ def Deletar_Item():
     delete_item(id_item=request.json.get("id"),id_pessoa=get_jwt_identity())
     return jsonify({"msg": "Item deletado com sucesso"}), 200
 
-#__________________________Rotas_de_FeedBacks_______________________#
+#__________________________Rotas_de_Criação,_Deleção_e_Alteração_de_FeedBacks_______________________#
 
 @app.route('/avaliacoes', methods=['GET'])
 @jwt_required()
@@ -169,6 +169,72 @@ def Cadastrar_Feedback():
     
     except Exception as e:
         return jsonify({"msg": f"Erro ao criar Feedback. {e}"}), 500
+
+#__________________________Rota_de_Meeting_______________________#
+
+@app.route('/meetings', methods=['GET'])
+@jwt_required()
+def Listar_Reuniões():
+
+    return jsonify(list_meetings()), 200  
+
+@app.route('/meeting', methods=['POST'])
+@jwt_required()
+def Cadastrar_Reunião():
+
+    data = request.get_json()
+
+    try:
+        register_meeting(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"Reunião cadastrada com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar Reunião. {e}"}), 500
+    
+#__________________________Rota_de_Training_______________________#
+
+@app.route('/trainings', methods=['GET'])   
+@jwt_required()
+def Listar_Treinamentos():
+
+    return jsonify(list_trainings()), 200
+
+@app.route('/training', methods=['POST'])
+@jwt_required()
+def Cadastrar_Treinamento():
+
+    data = request.get_json()
+
+    try:
+        register_training(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"Treinamento cadastrado com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar Treinamento. {e}"}), 500
+
+
+#__________________________Rota_de_Monthly_Schedule_______________________#
+
+@app.route('/monthly_schedule', methods=['GET'])    
+@jwt_required()
+def Listar_Agendamentos():
+
+    return jsonify(list_monthly_schedule()), 200
+
+@app.route('/monthly_schedule', methods=['POST'])
+@jwt_required()
+def Cadastrar_Agendamento():
+
+    data = request.get_json()
+
+    try:
+        register_monthly_schedule(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"Agendamento cadastrado com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar monthly schedule. {e}"}), 500
+
+
 
 #__________________________Rota_de_Chat_______________________#
 

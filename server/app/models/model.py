@@ -121,7 +121,7 @@ class Feedback(Base):
 
     id = Column(Integer, primary_key=True)
     comment = Column(Text, nullable=False)
-    rating = Column(Enum('0', '1', '2','3', '4','5'))  
+    rating = Column(Enum(0, 1, 2, 3, 4, 5))  
     create_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
 
