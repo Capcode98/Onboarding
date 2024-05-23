@@ -3,7 +3,7 @@ from flask_socketio import send, emit
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token, transform_the_last_token_in_expired
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token, transform_the_last_token_in_expired, list_meetings, list_trainings, register_meeting, register_training, list_monthly_schedule
 from app import app, socketIo
 
 #__________________________Criação_de_Token_______________________________#
@@ -151,7 +151,7 @@ def Deletar_Item():
 
 #__________________________Rotas_de_Criação,_Deleção_e_Alteração_de_FeedBacks_______________________#
 
-@app.route('/avaliacoes', methods=['GET'])
+@app.route('/avaliations', methods=['GET'])
 @jwt_required()
 def Listar_Avaliações():
 
@@ -172,11 +172,11 @@ def Cadastrar_Feedback():
 
 #__________________________Rota_de_Meeting_______________________#
 
-@app.route('/meetings', methods=['GET'])
+@app.route('/meeting', methods=['GET'])
 @jwt_required()
 def Listar_Reuniões():
 
-    return jsonify(list_meetings()), 200  
+    return jsonify(list_meetings(id_pessoa=get_jwt_identity())), 200  
 
 @app.route('/meeting', methods=['POST'])
 @jwt_required()
@@ -193,11 +193,11 @@ def Cadastrar_Reunião():
     
 #__________________________Rota_de_Training_______________________#
 
-@app.route('/trainings', methods=['GET'])   
+@app.route('/training', methods=['GET'])   
 @jwt_required()
 def Listar_Treinamentos():
 
-    return jsonify(list_trainings()), 200
+    return jsonify(list_trainings(id_pessoa=get_jwt_identity())), 200
 
 @app.route('/training', methods=['POST'])
 @jwt_required()
@@ -219,22 +219,7 @@ def Cadastrar_Treinamento():
 @jwt_required()
 def Listar_Agendamentos():
 
-    return jsonify(list_monthly_schedule()), 200
-
-@app.route('/monthly_schedule', methods=['POST'])
-@jwt_required()
-def Cadastrar_Agendamento():
-
-    data = request.get_json()
-
-    try:
-        register_monthly_schedule(id_pessoa=get_jwt_identity(),**data)
-        return jsonify({"msg": f"Agendamento cadastrado com sucesso"}), 200
-    
-    except Exception as e:
-        return jsonify({"msg": f"Erro ao criar monthly schedule. {e}"}), 500
-
-
+    return jsonify(list_monthly_schedule(id_pessoa=get_jwt_identity())), 200
 
 #__________________________Rota_de_Chat_______________________#
 

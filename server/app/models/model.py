@@ -94,7 +94,7 @@ class Token(Base):
 #===================================CHECKLIST=====================================
 #ESTA COMO DEVE SER
 class CheckList(Base):
-    __tablename__ = 'checklist'
+    __tablename__ = 'checklists'
 
     id = Column(Integer, primary_key=True)
     title = Column(String(100), nullable=False)
@@ -121,7 +121,7 @@ class Feedback(Base):
 
     id = Column(Integer, primary_key=True)
     comment = Column(Text, nullable=False)
-    rating = Column(Enum(0, 1, 2, 3, 4, 5))  
+    rating = Column(Enum("0", "1", "2", "3", "4", "5"))  
     create_at = Column(DateTime)
     person_cpf = Column(String(14), ForeignKey('pessoas.cpf'), nullable=False)
 
@@ -199,6 +199,7 @@ class Training(Base):
         self.init_at = virify_date(data_menor=datetime.now(),data_maior=init_at,param="início")
         self.finish_at = virify_date(data_menor=init_at,data_maior=finish_at,param="finalização")
         self.person_cpf = person_cpf
+        
 #======================ADICIONADO=POR=CONTA=DO=FRONT==============================
 
 engine = create_engine(f'mysql+mysqlconnector://root:{os.environ.get('MYSQL_SECRET')}@localhost/{os.environ.get('MYSQL_DATABASE_NAME')}')

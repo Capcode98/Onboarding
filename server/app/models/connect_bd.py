@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from app.models.model import Person, CheckList, Feedback, Token
+from app.models.model import Person, CheckList, Feedback, Token, Meeting, Training, Question, Answer
 from app.models.utils_bd import connecting_bd, sqlalchemy_to_dict
 from hashlib import sha256
 
@@ -386,3 +386,145 @@ def list_feedbacks():
 
 #_____________________________Funções_do_Monthly_Schedule_________________________________#
 
+def list_meetings(id_pessoa):
+    
+    """Lista todas as reuniões da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Meeting).filter(Meeting.person_cpf == id_pessoa)
+
+            meetings = query.all()
+
+            meetings_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for meeting in meetings:
+
+                meetings_dicts.append(sqlalchemy_to_dict(meeting)) 
+        
+            return meetings_dicts
+        
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def register_meeting(id_pessoa, **kwargs):
+    
+        '''Adiciona uma reunião na lista'''
+        
+        try:
+        
+            session = connecting_bd()
+        
+            if session is not None:
+        
+                meeting = Meeting(**kwargs,person_cpf=id_pessoa)
+        
+                session.add(meeting)
+        
+                session.commit()
+        
+                print("Cadastro da reunião realizado com sucesso")
+        
+        except SQLAlchemyError as e:
+        
+            print("Erro ao cadastrar a reunião:", e)
+        
+            session.rollback()
+            
+            raise e 
+        
+        finally:
+        
+            if session:
+        
+                session.close()
+
+def list_trainings(id_pessoa):
+        
+    """Lista todos os treinamentos da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Training).filter(Training.person_cpf == id_pessoa)
+
+            trainings = query.all()
+
+            trainings_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for training in trainings:
+
+                trainings_dicts.append(sqlalchemy_to_dict(training)) 
+        
+            return trainings_dicts
+        
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def register_training(id_pessoa, **kwargs):
+        
+    '''Adiciona um treinamento na lista'''
+    
+    try:
+    
+        session = connecting_bd()
+    
+        if session is not None:
+    
+            training = Training(**kwargs,person_cpf=id_pessoa)
+    
+            session.add(training)
+    
+            session.commit()
+    
+            print("Cadastro do treinamento realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar o treinamento:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def list_monthly_schedule(id_pessoa):
+    return [
+        {
+            "title":"Treinamentos",
+            "list" : [list_trainings(id_pessoa)]
+        }
+        ,
+        {
+            "title":"Reuniões",
+            "list" : [list_meetings(id_pessoa)]
+        }
+    ]
