@@ -520,11 +520,166 @@ def list_monthly_schedule(id_pessoa):
     return [
         {
             "title":"Treinamentos",
-            "list" : [list_trainings(id_pessoa)]
+            "list" : list_trainings(id_pessoa)
         }
         ,
         {
             "title":"Reuniões",
-            "list" : [list_meetings(id_pessoa)]
+            "list" : list_meetings(id_pessoa)
         }
     ]
+
+def remove_training(id, id_pessoa):
+    pass
+def remove_meeting(id, id_pessoa):
+    pass
+
+#_____________________________Funções_do_Questions_&_Answers_________________________________#
+
+def register_question(id_pessoa, **kwargs):
+        
+    '''Adiciona uma pergunta na lista'''
+    
+    try:
+    
+        session = connecting_bd()
+    
+        if session is not None:
+    
+            question = Question(**kwargs,person_cpf=id_pessoa)
+    
+            session.add(question)
+    
+            session.commit()
+    
+            print("Cadastro da pergunta realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar a pergunta:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def list_questions():
+            
+    """Lista todas as perguntas da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Question)
+
+            questions = query.all()
+
+            questions_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for question in questions:
+
+                questions_dicts.append(sqlalchemy_to_dict(question)) 
+        
+            return questions_dicts
+        
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def register_answer(id_pessoa,**kwargs):
+        
+    '''Adiciona uma resposta na lista'''
+    
+    try:
+    
+        session = connecting_bd()
+    
+        if session is not None:
+    
+            answer = Answer(**kwargs,person_cpf=id_pessoa)
+    
+            session.add(answer)
+    
+            session.commit()
+    
+            print("Cadastro da resposta realizado com sucesso")
+    
+    except SQLAlchemyError as e:
+    
+        print("Erro ao cadastrar a resposta:", e)
+    
+        session.rollback()
+        
+        raise e 
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def list_answer(id_questions):
+                
+    """Lista todas as respostas da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Answer).filter(Answer.id_question == id_questions)
+
+            answers = query.all()
+
+            answers_dicts=[]
+
+            # Convertendo os objetos para dicionários
+            for answer in answers:
+
+                answers_dicts.append(sqlalchemy_to_dict(answer)) 
+        
+            return answers_dicts
+        
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def list_questions_and_answers():
+    
+    list = []
+    indices = []
+    count = 0
+    for question in list_questions():
+        indices.append(question['id'])
+        list.append({'question': question['question'],'create_at':question['create_at']})
+    
+    for question in list:
+        print(question)
+        #for i in list_answer(question["id"]):
+        #    question["answers"] = i
+        #    print("i: ",i)
+    print("list: ",list)
+    return list
+

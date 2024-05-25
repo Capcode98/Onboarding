@@ -3,7 +3,7 @@ from flask_socketio import send, emit
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token, transform_the_last_token_in_expired, list_meetings, list_trainings, register_meeting, register_training, list_monthly_schedule
+from app.models.connect_bd import register_person, login, register_item, edit_item, delete_item, list_itens, register_feedback, list_feedbacks, register_token, transform_the_last_token_in_expired, list_meetings, list_trainings, register_meeting, register_training, list_monthly_schedule, register_question, register_answer, list_answer, list_questions, list_questions_and_answers, remove_meeting, remove_training
 from app import app, socketIo
 
 #__________________________Criação_de_Token_______________________________#
@@ -220,6 +220,46 @@ def Cadastrar_Treinamento():
 def Listar_Agendamentos():
 
     return jsonify(list_monthly_schedule(id_pessoa=get_jwt_identity())), 200
+
+#__________________________Rota_de_Question_______________________#
+
+@app.route('/question', methods=['POST'])
+@jwt_required()
+def Cadastrar_Perguntas():
+
+    data = request.get_json()
+
+    try:
+        register_question(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"Perguntas cadastrada com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar Perguntas. {e}"}), 500
+    
+#__________________________Rota_de_Answer_______________________#
+
+@app.route('/answer', methods=['POST'])
+@jwt_required()
+def Cadastrar_Respostas():
+
+    data = request.get_json()
+
+    try:
+        register_answer(id_pessoa=get_jwt_identity(),**data)
+        return jsonify({"msg": f"resposta cadastrado com sucesso"}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"Erro ao criar resposta. {e}"}), 500
+
+
+#__________________________Rota_de_Qustion_&_Answer_______________________#
+
+@app.route('/question_and_answer', methods=['GET'])    
+@jwt_required()
+def Listar_Perguntas_e_respostas():
+
+    return jsonify(list_questions_and_answers()), 200
+
 
 #__________________________Rota_de_Chat_______________________#
 
