@@ -7,6 +7,32 @@ from hashlib import sha256
 
 #________________________________Pessoas___________________________________#
 
+def get_person_by_cpf(cpf):
+        
+    '''Lista todas as pessoas'''
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Person).filter(Person.cpf == cpf)
+    
+            person = query.one()
+                
+            return person
+        
+    except Exception as e:
+    
+        print("Erro na consulta:", e)
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
 #FUNCIONANDO
 def login(login, password):
 
@@ -281,39 +307,39 @@ def edit_item(id_item,id_pessoa, **kwargs):
 #FUNCIONANDO
 def delete_item(id_pessoa, id_item):
         
-        """Exclui um item da lista"""
-        
-        session = connecting_bd()
-        
-        try:
-        
-            if session is not None:
-        
-                query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(CheckList.id == id_item)
-        
-                item = query.one()
-        
-                session.delete(item)
-        
-                session.commit()
-        
-                print("Item excluído com sucesso")
-        
-        except NoResultFound:
-        
-            raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
-        
-        except Exception as e:
-        
-            print("Erro ao excluir item:", e)
-        
-            session.rollback()
-        
-        finally:
-        
-            if session:
-        
-                session.close()
+    """Exclui um item da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(CheckList).filter(CheckList.person_cpf == id_pessoa).filter(CheckList.id == id_item)
+    
+            item = query.one()
+    
+            session.delete(item)
+    
+            session.commit()
+    
+            print("Item excluído com sucesso")
+    
+    except NoResultFound:
+    
+        raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
+    
+    except Exception as e:
+    
+        print("Erro ao excluir item:", e)
+    
+        session.rollback()
+    
+    finally:
+    
+        if session:
+    
+            session.close()
 
 #_____________________________Funções_do_FeedBack________________________________#
 
@@ -386,6 +412,7 @@ def list_feedbacks():
 
 #_____________________________Funções_do_Monthly_Schedule_________________________________#
 
+#FUNCIONANDO
 def list_meetings(id_pessoa):
     
     """Lista todas as reuniões da lista"""
@@ -419,6 +446,7 @@ def list_meetings(id_pessoa):
     
             session.close()
 
+#FUNCIONANDO
 def register_meeting(id_pessoa, **kwargs):
     
         '''Adiciona uma reunião na lista'''
@@ -451,6 +479,7 @@ def register_meeting(id_pessoa, **kwargs):
         
                 session.close()
 
+#FUNCIONANDO
 def list_trainings(id_pessoa):
         
     """Lista todos os treinamentos da lista"""
@@ -484,6 +513,7 @@ def list_trainings(id_pessoa):
     
             session.close()
 
+#FUNCIONANDO
 def register_training(id_pessoa, **kwargs):
         
     '''Adiciona um treinamento na lista'''
@@ -516,6 +546,7 @@ def register_training(id_pessoa, **kwargs):
     
             session.close()
 
+#FUNCIONANDO
 def list_monthly_schedule(id_pessoa):
     return [
         {
@@ -529,10 +560,77 @@ def list_monthly_schedule(id_pessoa):
         }
     ]
 
-def remove_training(id, id_pessoa):
-    pass
-def remove_meeting(id, id_pessoa):
-    pass
+#RESOLVER
+def delete_training(id, id_pessoa):
+    """Exclui um training da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Training).filter(Training.person_cpf == id_pessoa).filter(Training.id == id)
+    
+            item = query.one()
+    
+            session.delete(item)
+    
+            session.commit()
+    
+            print("Item excluído com sucesso")
+    
+    except NoResultFound:
+    
+        raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
+    
+    except Exception as e:
+    
+        print("Erro ao excluir item:", e)
+    
+        session.rollback()
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+
+def delete_meeting(id, id_pessoa):
+    """Exclui um training da lista"""
+    
+    session = connecting_bd()
+    
+    try:
+    
+        if session is not None:
+    
+            query = session.query(Meeting).filter(Meeting.person_cpf == id_pessoa).filter(Meeting.id == id)
+    
+            item = query.one()
+    
+            session.delete(item)
+    
+            session.commit()
+    
+            print("Item excluído com sucesso")
+    
+    except NoResultFound:
+    
+        raise ValueError("Item não encontrado ou não pertence ao seu usuario logado.")
+    
+    except Exception as e:
+    
+        print("Erro ao excluir item:", e)
+    
+        session.rollback()
+    
+    finally:
+    
+        if session:
+    
+            session.close()
+    
 
 #_____________________________Funções_do_Questions_&_Answers_________________________________#
 
@@ -669,17 +767,10 @@ def list_answer(id_questions):
 def list_questions_and_answers():
     
     list = []
-    indices = []
-    count = 0
+
     for question in list_questions():
-        indices.append(question['id'])
-        list.append({'question': question['question'],'create_at':question['create_at']})
-    
-    for question in list:
         print(question)
-        #for i in list_answer(question["id"]):
-        #    question["answers"] = i
-        #    print("i: ",i)
-    print("list: ",list)
+        list.append({'id_question' : question['id'],'question': question['question'],'create_at': question['create_at'],'name': get_person_by_cpf(question['person_cpf']).get_name(),'answers': [{"answer": i["answer"],"create_at": i["create_at"], "name": get_person_by_cpf(question['person_cpf']).get_name()} for i in list_answer(question['id'])]})
+
     return list
 

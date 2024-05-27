@@ -71,6 +71,9 @@ class Person(Base):
     
     def get_cpf(self):
         return self.cpf
+    
+    def get_name(self):
+        return self.name
 
 #ESTA COMO DEVE SER
 class Token(Base):
